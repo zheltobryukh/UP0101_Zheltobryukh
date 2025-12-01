@@ -14,33 +14,45 @@
             <Setter Property="Margin" Value="10"/>
             <Setter Property="Padding" Value="10"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderBrush" Value="#7FFF00"/>
             <Setter Property="CornerRadius" Value="8"/>
             <Setter Property="Background" Value="White"/>
         </Style>
+
+        <Style x:Key="AccentButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#00FA9A"/>
+            <Setter Property="FontFamily" Value="Times New Roman"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="5,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
 
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" 
                 Background="#7FFF00" 
                 BorderThickness="0,0,0,2" 
                 BorderBrush="#00FA9A">
-            <Grid>
+            <Grid Margin="20,0">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" 
                            Orientation="Horizontal" 
-                           VerticalAlignment="Center" 
-                           Margin="20,0">
+                           VerticalAlignment="Center">
                     <Image Source="/Resources/logo.jpg" 
                            Height="60" 
                            Stretch="Uniform"
@@ -58,10 +70,9 @@
                     </StackPanel>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1" 
+                <StackPanel Grid.Column="2" 
                            VerticalAlignment="Center" 
-                           HorizontalAlignment="Right" 
-                           Margin="20,0">
+                           HorizontalAlignment="Right">
                     <TextBlock x:Name="txtUserInfo" 
                               Text="Гость" 
                               FontSize="18" 
@@ -83,62 +94,79 @@
         <Border Grid.Row="1" 
                 Background="White" 
                 BorderThickness="0,0,0,1" 
-                BorderBrush="#CCCCCC">
-            <Grid Margin="20,0">
+                BorderBrush="#CCCCCC"
+                Padding="20,10">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0" 
+                <WrapPanel Grid.Column="0" 
                            Orientation="Horizontal" 
                            VerticalAlignment="Center"
-                           x:Name="pnlSearchPanel"
-                           Visibility="Collapsed">
-                    <TextBlock Text="Поиск:" 
-                              VerticalAlignment="Center" 
-                              Margin="0,0,10,0"
-                              FontFamily="Times New Roman"/>
-                    <TextBox x:Name="txtSearch" 
-                            Width="300" 
-                            TextChanged="TxtSearch_TextChanged"
-                            VerticalAlignment="Center"
-                            FontFamily="Times New Roman"/>
+                           x:Name="pnlSearchPanel">
 
-                    <TextBlock Text="Сортировка:" 
-                              VerticalAlignment="Center" 
-                              Margin="20,0,10,0"
-                              FontFamily="Times New Roman"/>
-                    <ComboBox x:Name="cmbSort" 
-                             Width="200" 
-                             SelectionChanged="CmbSort_SelectionChanged"
-                             VerticalAlignment="Center"
-                             FontFamily="Times New Roman"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,20,5">
+                        <TextBlock Text="Поиск:" 
+                                  VerticalAlignment="Center" 
+                                  Margin="0,0,10,0"
+                                  FontFamily="Times New Roman"/>
+                        <TextBox x:Name="txtSearch" 
+                                Width="200" 
+                                TextChanged="TxtSearch_TextChanged"
+                                VerticalAlignment="Center"
+                                Padding="2"
+                                FontFamily="Times New Roman"/>
+                    </StackPanel>
 
-                    <TextBlock Text="Фильтр:" 
-                              VerticalAlignment="Center" 
-                              Margin="20,0,10,0"
-                              FontFamily="Times New Roman"/>
-                    <ComboBox x:Name="cmbFilter" 
-                             Width="200" 
-                             SelectionChanged="CmbFilter_SelectionChanged"
-                             VerticalAlignment="Center"
-                             FontFamily="Times New Roman"/>
-                </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,20,5">
+                        <TextBlock Text="Сортировка:" 
+                                  VerticalAlignment="Center" 
+                                  Margin="0,0,10,0"
+                                  FontFamily="Times New Roman"/>
+                        <ComboBox x:Name="cmbSort" 
+                                 Width="180" 
+                                 SelectionChanged="CmbSort_SelectionChanged"
+                                 VerticalAlignment="Center"
+                                 FontFamily="Times New Roman"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <TextBlock Text="Фильтр:" 
+                                  VerticalAlignment="Center" 
+                                  Margin="0,0,10,0"
+                                  FontFamily="Times New Roman"/>
+                        <ComboBox x:Name="cmbFilter" 
+                                 Width="150" 
+                                 SelectionChanged="CmbFilter_SelectionChanged"
+                                 VerticalAlignment="Center"
+                                 FontFamily="Times New Roman"/>
+                    </StackPanel>
+                </WrapPanel>
 
                 <StackPanel Grid.Column="1" 
                            Orientation="Horizontal" 
                            VerticalAlignment="Center">
-                    <Button x:Name="btnManageProducts" 
-                           Content="Управление товарами" 
-                           Click="BtnManageProducts_Click"
+
+                    <Button x:Name="btnAddProduct" 
+                           Content="Добавить товар" 
+                           Style="{StaticResource AccentButtonStyle}"
+                           Click="BtnAddProduct_Click"
+                           Visibility="Collapsed"/>
+
+                    <Button x:Name="btnOrders" 
+                           Content="Заказы" 
+                           Style="{StaticResource AccentButtonStyle}"
+                           Click="BtnOrders_Click"
                            Visibility="Collapsed"
-                           Background="#00FA9A"
-                           FontFamily="Times New Roman"/>
+                           Background="#7FFF00"/>
 
                     <Button Content="Выход" 
                            Click="BtnLogout_Click"
-                           Background="#7FFF00"
+                           Margin="10,0,0,0"
+                           Padding="15,5"
+                           Background="#CCCCCC"
                            FontFamily="Times New Roman"/>
                 </StackPanel>
             </Grid>
@@ -146,12 +174,12 @@
 
         <ScrollViewer Grid.Row="2" 
                      VerticalScrollBarVisibility="Auto" 
-                     Margin="10"
+                     Padding="10"
                      Background="White">
             <ItemsControl x:Name="itemsProducts">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal"/>
+                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
@@ -160,94 +188,78 @@
                         <Border x:Name="productCard" 
                                 Style="{StaticResource ProductCardStyle}" 
                                 Width="350" 
-                                Height="250">
+                                Height="260">
                             <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="140"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Border Grid.Column="0" 
+                                <Border Grid.Row="0" Grid.Column="0" 
                                        Background="#F0F0F0" 
                                        CornerRadius="5"
                                        Margin="0,0,10,0">
-                                    <Image Source="{Binding ImagePath}" 
-                                          Stretch="UniformToFill"/>
+                                    <Image Stretch="UniformToFill" 
+                                           Source="{Binding ImagePath, FallbackValue=/Resources/picture.png}"/>
                                 </Border>
 
-                                <StackPanel Grid.Column="1">
+                                <StackPanel Grid.Row="0" Grid.Column="1">
                                     <TextBlock FontWeight="Bold" 
                                               FontSize="14" 
                                               TextWrapping="Wrap"
-                                              Margin="0,0,0,5"
+                                              Margin="0,0,25,5"
                                               FontFamily="Times New Roman">
-                                        <Run Text="{Binding CategoryNameText}"/>
+                                        <Run Text="{Binding CategoryNameText, Mode=OneWay}"/>
                                         <Run Text=" | "/>
-                                        <Run Text="{Binding ProductName}"/>
+                                        <Run Text="{Binding ProductName, Mode=OneWay}"/>
                                     </TextBlock>
 
                                     <TextBlock Text="{Binding ProductDescription}" 
                                               FontSize="11" 
-                                              Foreground="Gray" 
+                                              Foreground="#555555" 
                                               TextWrapping="Wrap"
-                                              MaxHeight="35"
+                                              MaxHeight="40"
                                               Margin="0,0,0,8"
                                               FontFamily="Times New Roman"/>
 
-                                    <TextBlock FontSize="12" Margin="0,0,0,3" FontFamily="Times New Roman">
-                                        <Run Text="Производитель:" FontWeight="SemiBold"/>
-                                        <Run Text="{Binding ManufacturerNameText}"/>
+                                    <TextBlock FontSize="12" Margin="0,0,0,2" FontFamily="Times New Roman">
+                                        <Run Text="Производитель: " FontWeight="SemiBold"/>
+                                        <Run Text="{Binding ManufacturerNameText, Mode=OneWay}"/>
                                     </TextBlock>
 
-                                    <TextBlock FontSize="12" Margin="0,0,0,3" FontFamily="Times New Roman">
-                                        <Run Text="Поставщик:" FontWeight="SemiBold"/>
-                                        <Run Text="{Binding SupplierNameText}"/>
+                                    <TextBlock FontSize="12" Margin="0,0,0,5" FontFamily="Times New Roman">
+                                        <Run Text="Цена: " FontWeight="SemiBold"/>
+                                        <Run Text="{Binding FinalPriceText, Mode=OneWay}" FontWeight="Bold"/>
                                     </TextBlock>
 
-                                    <StackPanel Orientation="Horizontal" Margin="0,8,0,3">
-                                        <TextBlock FontSize="14" 
-                                                  Foreground="Red" 
-                                                  TextDecorations="Strikethrough"
-                                                  Margin="0,0,10,0"
-                                                  FontFamily="Times New Roman">
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding HasDiscount}" Value="True">
-                                                            <Setter Property="Visibility" Value="Visible"/>
-                                                            <Setter Property="Text" Value="{Binding OriginalPriceText}"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
+                                    <TextBlock Text="Скидка!" 
+                                               Foreground="#2E8B57" 
+                                               FontWeight="Bold" 
+                                               FontFamily="Times New Roman"
+                                               Visibility="{Binding HasDiscount, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                                        <TextBlock Text="{Binding FinalPriceText}" 
-                                                  FontSize="16" 
-                                                  FontWeight="Bold" 
-                                                  Foreground="Black"
-                                                  FontFamily="Times New Roman"/>
-                                    </StackPanel>
-
-                                    <TextBlock FontSize="12" Margin="0,0,0,3" FontFamily="Times New Roman">
-                                        <Run Text="Единица измерения:" FontWeight="SemiBold"/>
-                                        <Run Text="{Binding UnitNameText}"/>
+                                    <TextBlock Text="Нет в наличии" 
+                                               Foreground="Red" 
+                                               FontWeight="Bold" 
+                                               FontFamily="Times New Roman">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsInStock}" Value="False">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
                                     </TextBlock>
-
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Количество на складе:" 
-                                                  FontWeight="SemiBold" 
-                                                  FontSize="12"
-                                                  Margin="0,0,5,0"
-                                                  FontFamily="Times New Roman"/>
-                                        <TextBlock Text="{Binding ProductQuantityInStock}" 
-                                                  FontSize="12"
-                                                  FontFamily="Times New Roman"/>
-                                    </StackPanel>
                                 </StackPanel>
 
-                                <Border Grid.Column="1" 
+                                <Border Grid.Row="0" Grid.Column="1" 
                                        Background="#E74C3C" 
                                        CornerRadius="3" 
                                        Padding="5,2"
@@ -257,24 +269,42 @@
                                     <TextBlock FontSize="12" 
                                               FontWeight="Bold" 
                                               Foreground="White"
-                                              FontFamily="Times New Roman">
+                                              FontFamily="Times New Roman"
+                                              Text="{Binding ProductDiscountAmount, StringFormat='-{0:F0}%'}">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="Visibility" Value="Collapsed"/>
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding HasDiscount}" Value="True">
                                                         <Setter Property="Visibility" Value="Visible"/>
-                                                        <Setter Property="Text">
-                                                            <Setter.Value>
-                                                                <Binding Path="ProductDiscountAmount" StringFormat="-{0:F0}%"/>
-                                                            </Setter.Value>
-                                                        </Setter>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </TextBlock.Style>
                                     </TextBlock>
                                 </Border>
+
+                                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" 
+                                          Orientation="Horizontal" 
+                                          HorizontalAlignment="Right"
+                                          Margin="0,5,0,0">
+                                    <Button Content="Редактировать" 
+                                            Tag="{Binding}"
+                                            Click="BtnEditProduct_Click"
+                                            Background="#7FFF00"
+                                            Margin="5,0"
+                                            Padding="10,2"
+                                            FontFamily="Times New Roman"
+                                            Visibility="{Binding DataContext.IsAdminVisible, RelativeSource={RelativeSource AncestorType=Window}}"/>
+
+                                    <Button Content="Удалить" 
+                                            Tag="{Binding}"
+                                            Click="BtnDeleteProduct_Click"
+                                            Background="#FF6B6B"
+                                            Padding="10,2"
+                                            FontFamily="Times New Roman"
+                                            Visibility="{Binding DataContext.IsAdminVisible, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                </StackPanel>
                             </Grid>
                         </Border>
 
@@ -282,14 +312,19 @@
                             <DataTrigger Binding="{Binding HasLargeDiscount}" Value="True">
                                 <Setter TargetName="productCard" Property="Background" Value="#2E8B57"/>
                             </DataTrigger>
-
                             <DataTrigger Binding="{Binding IsInStock}" Value="False">
-                                <Setter TargetName="productCard" Property="Background" Value="#87CEEB"/>
+                                <Setter TargetName="productCard" Property="Background" Value="#DDDDDD"/>
                             </DataTrigger>
                         </DataTemplate.Triggers>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
+
+        <TextBlock Grid.Row="3" 
+                   x:Name="txtStatus" 
+                   Text="Показано 0 из 0 товаров" 
+                   FontFamily="Times New Roman" 
+                   Padding="10"/>
     </Grid>
 </Window>

@@ -1,0 +1,50 @@
+﻿<Window x:Class="ShoeStoreApp.Views.ProductWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Редактирование товара" Height="500" Width="600"
+        WindowStartupLocation="CenterScreen"
+        Background="White"
+        Icon="/Resources/Icon.ico">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Товар" FontSize="24" FontWeight="Bold" FontFamily="Times New Roman" Margin="0,0,0,20"/>
+
+        <ScrollViewer Grid.Row="1">
+            <StackPanel>
+                <TextBlock Text="Артикул:" FontFamily="Times New Roman"/>
+                <TextBox x:Name="txtArticle" Margin="0,5,0,10" FontFamily="Times New Roman"/>
+
+                <TextBlock Text="Название:" FontFamily="Times New Roman"/>
+                <TextBox x:Name="txtName" Margin="0,5,0,10" FontFamily="Times New Roman"/>
+
+                <TextBlock Text="Категория:" FontFamily="Times New Roman"/>
+                <ComboBox x:Name="cmbCategory" Margin="0,5,0,10" FontFamily="Times New Roman" DisplayMemberPath="CategoryName"/>
+
+                <TextBlock Text="Стоимость:" FontFamily="Times New Roman"/>
+                <TextBox x:Name="txtCost" Margin="0,5,0,10" FontFamily="Times New Roman"/>
+
+                <TextBlock Text="Скидка (%):" FontFamily="Times New Roman"/>
+                <TextBox x:Name="txtDiscount" Margin="0,5,0,10" FontFamily="Times New Roman"/>
+
+                <TextBlock Text="Количество на складе:" FontFamily="Times New Roman"/>
+                <TextBox x:Name="txtStock" Margin="0,5,0,10" FontFamily="Times New Roman"/>
+
+                <TextBlock Text="Описание:" FontFamily="Times New Roman"/>
+                <TextBox x:Name="txtDescription" Height="60" TextWrapping="Wrap" Margin="0,5,0,10" FontFamily="Times New Roman"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Content="Сохранить" Click="BtnSave_Click" 
+                    Background="#00FA9A" Width="100" Height="30" Margin="10,0" FontFamily="Times New Roman" FontWeight="Bold"/>
+            <Button Content="Отмена" Click="BtnCancel_Click" 
+                    Background="#CCCCCC" Width="100" Height="30" FontFamily="Times New Roman"/>
+        </StackPanel>
+    </Grid>
+</Window>

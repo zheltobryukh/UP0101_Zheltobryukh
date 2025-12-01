@@ -9,7 +9,7 @@
         MinHeight="650"
         MinWidth="700"
         Background="White"
-        Icon="/Resources/shoe.ico">
+        Icon="/Resources/Icon.ico">
 
     <Grid>
         <Grid.RowDefinitions>
