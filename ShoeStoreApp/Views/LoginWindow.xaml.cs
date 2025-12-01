@@ -53,7 +53,7 @@ namespace ShoeStoreApp.Views
             {
                 using (var context = DatabaseHelper.GetContext())
                 {
-                    var user = context.User
+                    var user = context.Users
                         .Include("UserRole")
                         .FirstOrDefault(u => u.UserLogin == login && u.UserPassword == password);
 
@@ -100,7 +100,7 @@ namespace ShoeStoreApp.Views
 
         private void OpenMainWindow()
         {
-            MainWindow mainWindow = new MainWindow();
+            Views.MainWindow mainWindow = new Views.MainWindow();
             mainWindow.Show();
             this.Close();
         }
