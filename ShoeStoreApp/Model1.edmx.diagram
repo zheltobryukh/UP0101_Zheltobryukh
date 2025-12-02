@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="7906440354cb47ddacb5a998acaf7653" Name="Diagram1">
+      <Diagram DiagramId="a07be5163ec1435f815ee479112d0ecd" Name="Diagram1">
         <EntityTypeShape EntityType="ShoeStoreDBModel.Category" Width="1.5" PointX="0.75" PointY="2.375" IsExpanded="true" />
         <EntityTypeShape EntityType="ShoeStoreDBModel.Manufacturer" Width="1.5" PointX="0.75" PointY="5.5" IsExpanded="true" />
         <EntityTypeShape EntityType="ShoeStoreDBModel.Order" Width="1.5" PointX="3" PointY="15.25" IsExpanded="true" />
@@ -17,16 +17,16 @@
         <EntityTypeShape EntityType="ShoeStoreDBModel.User" Width="1.5" PointX="0.75" PointY="17.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ShoeStoreDBModel.UserRole" Width="1.5" PointX="1.5" PointY="21.375" IsExpanded="true" />
         <EntityTypeShape EntityType="ShoeStoreDBModel.vw_ProductList" Width="1.5" PointX="5.75" PointY="5.75" IsExpanded="true" />
-        <AssociationConnector Association="ShoeStoreDBModel.FK__Product__Categor__4F7CD00D" ManuallyRouted="false" />
-        <AssociationConnector Association="ShoeStoreDBModel.FK__Product__Manufac__5070F446" ManuallyRouted="false" />
-        <AssociationConnector Association="ShoeStoreDBModel.FK__Order__OrderStat__5CD6CB2B" ManuallyRouted="false" />
-        <AssociationConnector Association="ShoeStoreDBModel.FK__Order__PickupPoi__5AEE82B9" ManuallyRouted="false" />
-        <AssociationConnector Association="ShoeStoreDBModel.FK__Order__UserID__5BE2A6F2" ManuallyRouted="false" />
-        <AssociationConnector Association="ShoeStoreDBModel.FK__OrderProd__Order__60A75C0F" ManuallyRouted="false" />
-        <AssociationConnector Association="ShoeStoreDBModel.FK__OrderProd__Produ__619B8048" ManuallyRouted="false" />
-        <AssociationConnector Association="ShoeStoreDBModel.FK__Product__Supplie__52593CB8" ManuallyRouted="false" />
-        <AssociationConnector Association="ShoeStoreDBModel.FK__Product__UnitID__5165187F" ManuallyRouted="false" />
-        <AssociationConnector Association="ShoeStoreDBModel.FK__User__RoleID__3B75D760" ManuallyRouted="false" />
+        <AssociationConnector Association="ShoeStoreDBModel.FK__Product__Categor__5AEE82B9" ManuallyRouted="false" />
+        <AssociationConnector Association="ShoeStoreDBModel.FK__Product__Manufac__5BE2A6F2" ManuallyRouted="false" />
+        <AssociationConnector Association="ShoeStoreDBModel.FK__Order__OrderStat__5629CD9C" ManuallyRouted="false" />
+        <AssociationConnector Association="ShoeStoreDBModel.FK__Order__PickupPoi__571DF1D5" ManuallyRouted="false" />
+        <AssociationConnector Association="ShoeStoreDBModel.FK__Order__UserID__5812160E" ManuallyRouted="false" />
+        <AssociationConnector Association="ShoeStoreDBModel.FK__OrderProd__Order__59063A47" ManuallyRouted="false" />
+        <AssociationConnector Association="ShoeStoreDBModel.FK__OrderProd__Produ__59FA5E80" ManuallyRouted="false" />
+        <AssociationConnector Association="ShoeStoreDBModel.FK__Product__Supplie__5CD6CB2B" ManuallyRouted="false" />
+        <AssociationConnector Association="ShoeStoreDBModel.FK__Product__UnitID__5DCAEF64" ManuallyRouted="false" />
+        <AssociationConnector Association="ShoeStoreDBModel.FK__User__RoleID__5EBF139D" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
