@@ -3,209 +3,174 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using ShoeStoreApp.Helpers;
+using System.Windows.Input;
 using ShoeStoreApp.Models;
+using ShoeStoreApp.Helpers; 
 
 namespace ShoeStoreApp.Views
 {
     public partial class MainWindow : Window
     {
         private List<Product> _allProducts;
-        private List<Product> _filteredProducts;
 
-        public Visibility IsAdminVisible { get; set; } = Visibility.Collapsed;
+        public bool IsAdmin { get; set; } = false;
 
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
+            LoadData();
             SetupUserInterface();
-            LoadProducts();
         }
 
         private void SetupUserInterface()
         {
-            if (UserSession.IsGuest)
+            var user = UserSession.CurrentUser;
+            if (user != null)
             {
-                txtUserInfo.Text = "Гость";
-                txtUserRole.Text = "Гостевой режим";
-                pnlSearchPanel.Visibility = Visibility.Collapsed;
-                btnAddProduct.Visibility = Visibility.Collapsed;
-                btnOrders.Visibility = Visibility.Collapsed;
-                IsAdminVisible = Visibility.Collapsed;
-            }
-            else if (UserSession.CurrentUser != null)
-            {
-                txtUserInfo.Text = UserSession.CurrentUser.FullName;
-                txtUserRole.Text = UserSession.CurrentUser.RoleNameText;
+                TxtUserName.Text = $"{user.UserSurname} {user.UserName} ({user.UserRole.RoleName})";
 
-                if (UserSession.CurrentUser.IsClient)
+                if (user.RoleID == 1)
                 {
-                    pnlSearchPanel.Visibility = Visibility.Collapsed;
-                    btnAddProduct.Visibility = Visibility.Collapsed;
-                    btnOrders.Visibility = Visibility.Collapsed;
-                    IsAdminVisible = Visibility.Collapsed;
+                    IsAdmin = true;
+                    BtnAddProduct.Visibility = Visibility.Visible;
+                    BtnOrders.Visibility = Visibility.Visible;
                 }
-                else if (UserSession.CurrentUser.IsManager)
+                else if (user.RoleID == 2)
                 {
-                    pnlSearchPanel.Visibility = Visibility.Visible;
-                    btnAddProduct.Visibility = Visibility.Collapsed;
-                    btnOrders.Visibility = Visibility.Visible;
-                    IsAdminVisible = Visibility.Collapsed;
+                    BtnOrders.Visibility = Visibility.Visible;
                 }
-                else if (UserSession.CurrentUser.IsAdmin)
-                {
-                    pnlSearchPanel.Visibility = Visibility.Visible;
-                    btnAddProduct.Visibility = Visibility.Visible;
-                    btnOrders.Visibility = Visibility.Visible;
-                    IsAdminVisible = Visibility.Visible;
-                }
+            }
+            else
+            {
+                TxtUserName.Text = "Гость";
+                PanelControls.Visibility = Visibility.Collapsed;
+
             }
         }
 
-        private void LoadProducts()
+        private void LoadData()
         {
             try
             {
-                using (var context = DatabaseHelper.GetContext())
+                using (var db = new ShoeStoreDBEntities())
                 {
-                    _allProducts = context.Products
-                        .Include("Category")
-                        .Include("Manufacturer")
-                        .Include("Supplier")
-                        .Include("Unit")
-                        .ToList();
+                    _allProducts = db.Products.Include("Manufacturer").Include("Category").ToList();
 
-                    ApplyFiltersAndSearch();
+                    var manufacturers = db.Manufacturers.ToList();
+                    manufacturers.Insert(0, new Manufacturer { ManufacturerName = "Все производители" });
+                    CmbFilter.ItemsSource = manufacturers;
+                    CmbFilter.DisplayMemberPath = "ManufacturerName";
+                    CmbFilter.SelectedIndex = 0;
                 }
+                UpdateList();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка загрузки товаров: {ex.Message}");
+                MessageBox.Show("Ошибка загрузки данных: " + ex.Message);
             }
         }
 
-        private void ApplyFiltersAndSearch()
+        private void UpdateList()
         {
             if (_allProducts == null) return;
 
-            var query = _allProducts.AsEnumerable();
+            var currentList = _allProducts.AsEnumerable();
 
-            if (!string.IsNullOrWhiteSpace(txtSearch?.Text))
+            var searchText = TxtSearch.Text.ToLower();
+            if (!string.IsNullOrWhiteSpace(searchText))
             {
-                string text = txtSearch.Text.ToLower();
-                query = query.Where(p =>
-                    p.ProductName.ToLower().Contains(text) ||
-                    (p.ProductDescription != null && p.ProductDescription.ToLower().Contains(text))
-                );
+                currentList = currentList.Where(p =>
+                    p.ProductName.ToLower().Contains(searchText) ||
+                    (p.ProductDescription != null && p.ProductDescription.ToLower().Contains(searchText)));
             }
 
-            if (cmbFilter?.SelectedItem is ComboBoxItem itemFilter)
+            if (CmbFilter.SelectedIndex > 0)
             {
-                switch (itemFilter.Tag.ToString())
+                var selectedManuf = CmbFilter.SelectedItem as Manufacturer;
+                if (selectedManuf != null)
+                    currentList = currentList.Where(p => p.ManufacturerID == selectedManuf.ManufacturerID);
+            }
+
+            if (CmbSort.SelectedItem is ComboBoxItem selectedSort)
+            {
+                switch (selectedSort.Tag.ToString())
                 {
-                    case "Discount": query = query.Where(p => p.HasDiscount); break;
-                    case "InStock": query = query.Where(p => p.IsInStock); break;
-                    case "OutOfStock": query = query.Where(p => !p.IsInStock); break;
+                    case "PriceAsc":
+                        currentList = currentList.OrderBy(p => p.ProductCost);
+                        break;
+                    case "PriceDesc":
+                        currentList = currentList.OrderByDescending(p => p.ProductCost);
+                        break;
                 }
             }
 
-            if (cmbSort?.SelectedItem is ComboBoxItem itemSort)
-            {
-                switch (itemSort.Tag.ToString())
-                {
-                    case "NameAsc": query = query.OrderBy(p => p.ProductName); break;
-                    case "NameDesc": query = query.OrderByDescending(p => p.ProductName); break;
-                    case "PriceAsc": query = query.OrderBy(p => p.FinalCost); break;
-                    case "PriceDesc": query = query.OrderByDescending(p => p.FinalCost); break;
-                    case "Stock": query = query.OrderByDescending(p => p.ProductQuantityInStock); break;
-                }
-            }
-
-            _filteredProducts = query.ToList();
-            itemsProducts.ItemsSource = _filteredProducts;
-            txtStatus.Text = $"Показано {_filteredProducts.Count} из {_allProducts.Count} товаров";
+            var result = currentList.ToList();
+            LvProducts.ItemsSource = result;
+            TxtStatusCount.Text = $"{result.Count} из {_allProducts.Count} товаров";
         }
 
-        private void TxtSearch_TextChanged(object sender, TextChangedEventArgs e) => ApplyFiltersAndSearch();
-        private void CmbSort_SelectionChanged(object sender, SelectionChangedEventArgs e) => ApplyFiltersAndSearch();
-        private void CmbFilter_SelectionChanged(object sender, SelectionChangedEventArgs e) => ApplyFiltersAndSearch();
+        private void TxtSearch_TextChanged(object sender, TextChangedEventArgs e) => UpdateList();
+        private void CmbSort_SelectionChanged(object sender, SelectionChangedEventArgs e) => UpdateList();
+        private void CmbFilter_SelectionChanged(object sender, SelectionChangedEventArgs e) => UpdateList();
+
+        private void BtnLogout_Click(object sender, RoutedEventArgs e)
+        {
+            UserSession.CurrentUser = null;
+            new LoginWindow().Show();
+            Close();
+        }
 
         private void BtnAddProduct_Click(object sender, RoutedEventArgs e)
         {
-            ProductWindow window = new ProductWindow(null);
-            if (window.ShowDialog() == true)
+            var win = new ProductWindow(null);
+            if (win.ShowDialog() == true)
             {
-                LoadProducts();
+                LoadData();
             }
         }
 
-        private void BtnEditProduct_Click(object sender, RoutedEventArgs e)
+        private void LvProducts_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var product = (sender as Button).Tag as Product;
-            ProductWindow window = new ProductWindow(product);
-            if (window.ShowDialog() == true)
-            {
-                LoadProducts();
-            }
-        }
+            if (!IsAdmin) return;
 
-        private void BtnDeleteProduct_Click(object sender, RoutedEventArgs e)
-        {
-            var product = (sender as Button).Tag as Product;
-
-            if (MessageBox.Show($"Вы уверены, что хотите удалить {product.ProductName}?",
-                "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (LvProducts.SelectedItem is Product selectedProduct)
             {
-                using (var context = DatabaseHelper.GetContext())
+                var win = new ProductWindow(selectedProduct);
+                if (win.ShowDialog() == true)
                 {
-                    var pToDelete = context.Products.Find(product.ProductID);
-                    if (pToDelete != null)
+                    LoadData();
+                }
+            }
+        }
+
+        private void MenuItemDelete_Click(object sender, RoutedEventArgs e)
+        {
+            var product = LvProducts.SelectedItem as Product;
+            if (product == null) return;
+
+            if (MessageBox.Show("Вы уверены, что хотите удалить этот товар?", "Удаление", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                using (var db = new ShoeStoreDBEntities())
+                {
+                    if (db.OrderProducts.Any(op => op.ProductID == product.ProductID))
                     {
-                        context.Products.Remove(pToDelete);
-                        context.SaveChanges();
-                        LoadProducts();
-                        MessageBox.Show("Товар удален");
+                        MessageBox.Show("Нельзя удалить товар, который есть в заказах.");
+                        return;
                     }
+
+                    var p = db.Products.Find(product.ProductID);
+                    db.Products.Remove(p);
+                    db.SaveChanges();
+                    MessageBox.Show("Товар удален.");
+                    LoadData();
                 }
             }
         }
 
         private void BtnOrders_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Окно работы с заказами", "Заказы");
-        }
-
-        private void BtnLogout_Click(object sender, RoutedEventArgs e)
-        {
-            UserSession.Logout();
-            new LoginWindow().Show();
-            Close();
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            SetupSearchAndFilters();
-        }
-
-        private void SetupSearchAndFilters()
-        {
-            if (cmbSort.Items.Count == 0)
-            {
-                cmbSort.Items.Add(new ComboBoxItem { Content = "Без сортировки", Tag = "None" });
-                cmbSort.Items.Add(new ComboBoxItem { Content = "По названию (А-Я)", Tag = "NameAsc" });
-                cmbSort.Items.Add(new ComboBoxItem { Content = "По названию (Я-А)", Tag = "NameDesc" });
-                cmbSort.Items.Add(new ComboBoxItem { Content = "По цене (возрастание)", Tag = "PriceAsc" });
-                cmbSort.Items.Add(new ComboBoxItem { Content = "По цене (убывание)", Tag = "PriceDesc" });
-                cmbSort.Items.Add(new ComboBoxItem { Content = "По количеству на складе", Tag = "Stock" });
-                cmbSort.SelectedIndex = 0;
-
-                cmbFilter.Items.Add(new ComboBoxItem { Content = "Все товары", Tag = "All" });
-                cmbFilter.Items.Add(new ComboBoxItem { Content = "Со скидкой", Tag = "Discount" });
-                cmbFilter.Items.Add(new ComboBoxItem { Content = "В наличии", Tag = "InStock" });
-                cmbFilter.Items.Add(new ComboBoxItem { Content = "Нет в наличии", Tag = "OutOfStock" });
-                cmbFilter.SelectedIndex = 0;
-            }
+            new OrdersWindow().ShowDialog();
         }
     }
 }

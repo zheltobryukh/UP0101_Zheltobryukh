@@ -1,0 +1,17 @@
+﻿<Window x:Class="ShoeStoreApp.Views.OrderEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Редактирование заказа" Height="300" Width="400" WindowStartupLocation="CenterScreen">
+    <StackPanel Margin="20">
+        <TextBlock Text="Статус заказа:"/>
+        <ComboBox x:Name="CmbStatus" DisplayMemberPath="OrderStatusName" SelectedValuePath="OrderStatusID" Margin="0,0,0,10"/>
+
+        <TextBlock Text="Дата доставки:"/>
+        <DatePicker x:Name="DpDeliveryDate" Margin="0,0,0,10"/>
+
+        <TextBlock Text="Пункт выдачи:"/>
+        <ComboBox x:Name="CmbPickupPoint" DisplayMemberPath="PickupPointAddress" SelectedValuePath="PickupPointID" Margin="0,0,0,10"/>
+
+        <Button Content="Сохранить" Click="BtnSave_Click" Background="#00FA9A" Height="30"/>
+    </StackPanel>
+</Window>

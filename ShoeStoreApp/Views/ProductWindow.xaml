@@ -1,50 +1,63 @@
 ﻿<Window x:Class="ShoeStoreApp.Views.ProductWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Редактирование товара" Height="500" Width="600"
-        WindowStartupLocation="CenterScreen"
-        Background="White"
-        Icon="/Resources/Icon.ico">
-
+        Title="Товар" Height="750" Width="900"
+        WindowStartupLocation="CenterScreen" ResizeMode="CanResize">
     <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        <TextBlock Text="Товар" FontSize="24" FontWeight="Bold" FontFamily="Times New Roman" Margin="0,0,0,20"/>
+        <StackPanel Grid.Column="0">
+            <Image x:Name="ImgProduct" Height="200" Stretch="Uniform" Source="/Resources/picture.png" Margin="0,0,0,10"/>
+            <Button Content="Изменить фото" Click="BtnChangeImage_Click"/>
+            <TextBlock Text="Макс. 300x200" HorizontalAlignment="Center" Foreground="Gray" FontSize="10"/>
+        </StackPanel>
 
-        <ScrollViewer Grid.Row="1">
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" Margin="20,0,0,0">
             <StackPanel>
-                <TextBlock Text="Артикул:" FontFamily="Times New Roman"/>
-                <TextBox x:Name="txtArticle" Margin="0,5,0,10" FontFamily="Times New Roman"/>
+                <TextBlock Text="Артикул (только чтение при ред.):"/>
+                <TextBox x:Name="TxtArticle" MaxLength="100"/>
 
-                <TextBlock Text="Название:" FontFamily="Times New Roman"/>
-                <TextBox x:Name="txtName" Margin="0,5,0,10" FontFamily="Times New Roman"/>
+                <TextBlock Text="Наименование:" Margin="0,5,0,0"/>
+                <TextBox x:Name="TxtName"/>
 
-                <TextBlock Text="Категория:" FontFamily="Times New Roman"/>
-                <ComboBox x:Name="cmbCategory" Margin="0,5,0,10" FontFamily="Times New Roman" DisplayMemberPath="CategoryName"/>
+                <TextBlock Text="Категория:" Margin="0,5,0,0"/>
+                <ComboBox x:Name="CmbCategory" DisplayMemberPath="CategoryName" SelectedValuePath="CategoryID"/>
 
-                <TextBlock Text="Стоимость:" FontFamily="Times New Roman"/>
-                <TextBox x:Name="txtCost" Margin="0,5,0,10" FontFamily="Times New Roman"/>
+                <TextBlock Text="Производитель:" Margin="0,5,0,0"/>
+                <ComboBox x:Name="CmbManufacturer" DisplayMemberPath="ManufacturerName" SelectedValuePath="ManufacturerID"/>
 
-                <TextBlock Text="Скидка (%):" FontFamily="Times New Roman"/>
-                <TextBox x:Name="txtDiscount" Margin="0,5,0,10" FontFamily="Times New Roman"/>
+                <TextBlock Text="Поставщик:" Margin="0,5,0,0"/>
+                <ComboBox x:Name="CmbSupplier" DisplayMemberPath="SupplierName" SelectedValuePath="SupplierID"/>
 
-                <TextBlock Text="Количество на складе:" FontFamily="Times New Roman"/>
-                <TextBox x:Name="txtStock" Margin="0,5,0,10" FontFamily="Times New Roman"/>
+                <Grid Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                        <TextBlock Text="Цена:"/>
+                        <TextBox x:Name="TxtCost"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                        <TextBlock Text="Кол-во на складе:"/>
+                        <TextBox x:Name="TxtStock"/>
+                    </StackPanel>
+                </Grid>
 
-                <TextBlock Text="Описание:" FontFamily="Times New Roman"/>
-                <TextBox x:Name="txtDescription" Height="60" TextWrapping="Wrap" Margin="0,5,0,10" FontFamily="Times New Roman"/>
+                <TextBlock Text="Скидка (%):" Margin="0,5,0,0"/>
+                <TextBox x:Name="TxtDiscount"/>
+
+                <TextBlock Text="Единица измерения:" Margin="0,5,0,0"/>
+                <ComboBox x:Name="CmbUnit" DisplayMemberPath="UnitName" SelectedValuePath="UnitID"/>
+
+                <TextBlock Text="Описание:" Margin="0,5,0,0"/>
+                <TextBox x:Name="TxtDescription" Height="60" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+
+                <Button Content="Сохранить" Click="BtnSave_Click" Background="#00FA9A" Height="30" Margin="0,20,0,10"/>
             </StackPanel>
         </ScrollViewer>
-
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button Content="Сохранить" Click="BtnSave_Click" 
-                    Background="#00FA9A" Width="100" Height="30" Margin="10,0" FontFamily="Times New Roman" FontWeight="Bold"/>
-            <Button Content="Отмена" Click="BtnCancel_Click" 
-                    Background="#CCCCCC" Width="100" Height="30" FontFamily="Times New Roman"/>
-        </StackPanel>
     </Grid>
 </Window>
